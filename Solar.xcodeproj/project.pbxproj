@@ -12,6 +12,7 @@
 		14456B851EF96AC000D76A4D /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14456B831EF96ABA00D76A4D /* City.swift */; };
 		14456B881EF96ACD00D76A4D /* Solar_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14456B861EF96ACA00D76A4D /* Solar_iOSTests.swift */; };
 		14456B8D1EF96AE200D76A4D /* CorrectResults.json in Resources */ = {isa = PBXBuildFile; fileRef = 14456B891EF96AD900D76A4D /* CorrectResults.json */; };
+		BB978695229F2F28008D120B /* WellingtonResult.json in Resources */ = {isa = PBXBuildFile; fileRef = BB59730E229E6A550008E677 /* WellingtonResult.json */; };
 		F7FC5B661D469B4E00C4D3EB /* Solar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FC5B651D469B4E00C4D3EB /* Solar.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,7 @@
 		14456B891EF96AD900D76A4D /* CorrectResults.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = CorrectResults.json; path = "Solar iOSTests/CorrectResults.json"; sourceTree = "<group>"; };
 		14456B8A1EF96AD900D76A4D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Solar iOSTests/Info.plist"; sourceTree = "<group>"; };
 		97837EAB1E4BB1DE000FEF64 /* Solar_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Solar_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB59730E229E6A550008E677 /* WellingtonResult.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = WellingtonResult.json; sourceTree = "<group>"; };
 		F7FC5B5A1D469B2700C4D3EB /* Solar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Solar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7FC5B651D469B4E00C4D3EB /* Solar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Solar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +89,7 @@
 			children = (
 				14456B8A1EF96AD900D76A4D /* Info.plist */,
 				14456B891EF96AD900D76A4D /* CorrectResults.json */,
+				BB59730E229E6A550008E677 /* WellingtonResult.json */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = F7FC5B501D469B2700C4D3EB;
@@ -252,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14456B8D1EF96AE200D76A4D /* CorrectResults.json in Resources */,
+				BB978695229F2F28008D120B /* WellingtonResult.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

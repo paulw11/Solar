@@ -13,15 +13,16 @@ import Solar
 
 final class Solar_iOSTests: XCTestCase {
     
-    private let testDate = Date(timeIntervalSince1970: 1486598400)
-    
+  //  private let testDate = Date(timeIntervalSince1970: 1486598400)
+    private let testDate = Date(timeIntervalSince1970:  1559166029.4229798)
+   
     /// How accurate, in minutes either side of the actual sunrise sunset, we want to be
     /// This is necessary as the algorithm uses assumptions during calculation
     private let testAccuracy: TimeInterval = 60 * 5
     
     private lazy var cities: [City] = {
         guard
-            let resultsURLString = Bundle(for: type(of: self)).path(forResource: "CorrectResults", ofType: "json"),
+            let resultsURLString = Bundle(for: type(of: self)).path(forResource: "WellingtonResult", ofType: "json"),
             let data = try? Data(contentsOf: URL(fileURLWithPath: resultsURLString)),
             let dictionary = try? JSONSerialization.jsonObject(with: data, options: []),
             let cityDictionaries = dictionary as? [[String : Any]]
@@ -77,7 +78,10 @@ final class Solar_iOSTests: XCTestCase {
     
     func testIsDayTime_isTrue_betweenSunriseAndSunset() {
         let daytime = Date(timeIntervalSince1970: 1486641600) // noon
-        let city = cities.first(where: { $0.name == "London" })!
+        guard let city = cities.first(where: { $0.name == "London" }) else {
+            XCTFail("Cannot get London")
+            return
+        }
         
         guard
             let solar = Solar(for: daytime, coordinate: city.coordinate)
@@ -92,10 +96,13 @@ final class Solar_iOSTests: XCTestCase {
     
     func testIsDayTime_isTrue_exactlyAtSunrise() {
         let sunrise = Date(timeIntervalSince1970: 1486625181)
-        let city = cities.first(where: { $0.name == "London" })!
+        guard let city = cities.first(where: { $0.name == "London" }) else {
+            XCTFail("Cannot get London")
+            return
+        }
         
         guard
-            let solar = Solar(for: sunrise, coordinate: city.coordinate)
+            let solar = Solar(for: sunrise, coordinate: city.coordinate, timezone: TimeZone(identifier: "UTC"))
         else {
             XCTFail("Cannot get solar")
             return
@@ -106,8 +113,11 @@ final class Solar_iOSTests: XCTestCase {
     }
     
     func testIsDayTime_isFalse_exactlyAtSunset() {
-        let sunset = Date(timeIntervalSince1970: 1486659846)
-        let city = cities.first(where: { $0.name == "London" })!
+        let sunset = Date(timeIntervalSince1970: 1486659876)
+        guard let city = cities.first(where: { $0.name == "London" }) else {
+            XCTFail("Cannot get London")
+            return
+        }
         
         guard
             let solar = Solar(for: sunset, coordinate: city.coordinate)
@@ -122,10 +132,13 @@ final class Solar_iOSTests: XCTestCase {
     
     func testIsDayTime_isFalse_beforeSunrise() {
         let beforeSunrise = Date(timeIntervalSince1970: 1486624980)
-        let city = cities.first(where: { $0.name == "London" })!
+        guard let city = cities.first(where: { $0.name == "London" }) else {
+            XCTFail("Cannot get London")
+            return
+        }
         
         guard
-            let solar = Solar(for: beforeSunrise, coordinate: city.coordinate)
+            let solar = Solar(for: beforeSunrise, coordinate: city.coordinate,timezone: TimeZone(identifier: "UTC"))
         else {
             XCTFail("Cannot get solar")
             return
@@ -137,7 +150,10 @@ final class Solar_iOSTests: XCTestCase {
     
     func testIsDayTime_isFalse_afterSunset() {
         let afterSunset = Date(timeIntervalSince1970: 1486659960)
-        let city = cities.first(where: { $0.name == "London" })!
+        guard let city = cities.first(where: { $0.name == "London" }) else {
+            XCTFail("Cannot get London")
+            return
+        }
         
         guard
             let solar = Solar(for: afterSunset, coordinate: city.coordinate)

@@ -31,6 +31,7 @@ public struct Solar {
     
     /// The coordinate that is used for the calculation
     public let coordinate: CLLocationCoordinate2D
+    public let timezone: TimeZone?
     
     /// The date to generate sunrise / sunset times for
     public fileprivate(set) var date: Date
@@ -46,9 +47,9 @@ public struct Solar {
     
     // MARK: Init
     
-    public init?(for date: Date = Date(), coordinate: CLLocationCoordinate2D) {
+    public init?(for date: Date = Date(), coordinate: CLLocationCoordinate2D, timezone: TimeZone? = nil) {
         self.date = date
-        
+        self.timezone = timezone
         guard CLLocationCoordinate2DIsValid(coordinate) else {
             return nil
         }
@@ -91,15 +92,27 @@ public struct Solar {
     
     fileprivate func calculate(_ sunriseSunset: SunriseSunset, for date: Date, and zenith: Zenith) -> Date? {
         guard let utcTimezone = TimeZone(identifier: "UTC") else { return nil }
-        
+       
         // Get the day of the year
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = utcTimezone
+        var localCalendar = Calendar(identifier: .gregorian)
+       
         guard let dayInt = calendar.ordinality(of: .day, in: .year, for: date) else { return nil }
         let day = Double(dayInt)
         
         // Convert longitude to hour value and calculate an approx. time
         let lngHour = coordinate.longitude / 15
+        
+        guard let timezone = self.timezone ?? TimeZone(secondsFromGMT: Int(lngHour * 3600)) else {
+            return nil
+        }
+        
+        localCalendar.timeZone = timezone
+        guard let localDay =  localCalendar.ordinality(of: .day, in: .year, for: date) else {
+            return nil
+        }
+
         
         let hourTime: Double = sunriseSunset == .sunrise ? 6 : 18
         let t = day + ((hourTime - lngHour) / 24)
@@ -154,7 +167,7 @@ public struct Solar {
         let T = H + RA - (0.06571 * t) - 6.622
         
         // Adjust time back to UTC
-        var UT = T - lngHour
+        var UT = T// - lngHour
         
         // Normalise UT into [0, 24] range
         UT = normalise(UT, withMaximum: 24)
@@ -164,7 +177,7 @@ public struct Solar {
         let minute = floor((UT - hour) * 60.0)
         let second = (((UT - hour) * 60) - minute) * 60.0
         
-        let shouldBeYesterday = lngHour > 0 && UT > 12 && sunriseSunset == .sunrise
+     /*   let shouldBeYesterday = lngHour > 0 && UT > 12 && sunriseSunset == .sunrise
         let shouldBeTomorrow = lngHour < 0 && UT < 12 && sunriseSunset == .sunset
         
         let setDate: Date
@@ -174,15 +187,25 @@ public struct Solar {
             setDate = Date(timeInterval: (60 * 60 * 24), since: date)
         } else {
             setDate = date
-        }
+        }*/
         
+        let setDate: Date
+        
+        if localDay > dayInt {
+            setDate = calendar.date(byAdding: .day, value: 1, to: date) ?? date
+        } else if localDay < dayInt {
+            setDate = calendar.date(byAdding: .day, value: -1, to: date) ?? date
+        } else {
+            setDate = date
+        }
+       
         var components = calendar.dateComponents([.day, .month, .year], from: setDate)
         components.hour = Int(hour)
         components.minute = Int(minute)
         components.second = Int(second)
         
-        calendar.timeZone = utcTimezone
-        return calendar.date(from: components)
+        let returnDate = localCalendar.date(from: components)
+        return returnDate
     }
     
     /// Normalises a value between 0 and `maximum`, by adding or subtracting `maximum`
