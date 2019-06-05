@@ -31,6 +31,15 @@ let sunset = solar.sunset
 
 Note that all dates are UTC. Don't forget to format your date into the appropriate timezone if required.
 
+You can provide a `TimeZone` to `Solar` to help it work out the correct date for sunrise and sunet.  If you don't provide a `TimeZone` then Solar will determine the time zone based on the provided longitude;  This will generally be correct but may have issues for locations close to the international date line.
+
+You can use `CLGeocoder` to retrieve a `CLPlacemark` for a given latitude and longitude.  The `CLPlacemark` includes a `timeZone` property.
+
+```swift
+let timezone = TimeZone(identifier:"Australia/Sydney")
+let solar = Solar(latitude: 51.528308, longitude: -0.1340267, timeZone: timezone)
+```
+
 ### Types of sunrise and sunset
 
 There are several types of sunrise and sunset that Solar generates. They differ by how many degrees the sun lies below the horizon:
